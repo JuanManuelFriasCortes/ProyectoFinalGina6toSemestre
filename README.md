@@ -1,4 +1,4 @@
-# ☕ Cafetería MOMO — Proyecto Full Stack (React + Node.js + MySQL)
+# Cafetería MOMO — Proyecto Full Stack (React + Node.js + MySQL)
 
 App Full Stack para la cafetería MOMO (Aguascalientes). Permite ver el menú,
 registrarse, iniciar sesión, hacer pedidos y administrar el catálogo.
@@ -7,7 +7,7 @@ registrarse, iniciar sesión, hacer pedidos y administrar el catálogo.
 > el encargado de diseño le aplique CSS después. Toda la lógica programable
 > (funciones, hooks, APIs, auth, routing, BD) ya está implementada.
 
-## 📁 Estructura
+## Estructura
 
 ```
 momo/
@@ -15,7 +15,7 @@ momo/
 └── frontend/   -> React + Vite (consume las APIs)
 ```
 
-## 🗄️ 1. Base de datos (MySQL)
+## 1. Base de datos (MySQL)
 
 1. Abre MySQL y ejecuta el script:
    ```bash
@@ -39,7 +39,7 @@ momo/
    | cliente | ana@momo.com    | cliente123  |
    | cliente | luis@momo.com   | cliente123  |
 
-## 🔧 2. Backend
+## 2. Backend
 
 ```bash
 cd backend
@@ -64,7 +64,7 @@ npm run dev              # arranca en http://localhost:4000
 | GET    | /api/pedidos              | admin         | todos los pedidos |
 | PUT    | /api/pedidos/:id/estado   | admin         | cambiar estado    |
 
-## ⚛️ 3. Frontend
+## 3. Frontend
 
 ```bash
 cd frontend
@@ -73,7 +73,7 @@ cp .env.example .env     # VITE_API_URL=http://localhost:4000/api
 npm run dev              # arranca en http://localhost:5173
 ```
 
-## 🌐 4. Deploy (resumen)
+## 4. Deploy (resumen)
 
 - **Backend + MySQL:** Railway o Render (ambos dan MySQL gratis).
   Sube el repo, configura las variables de entorno (las de `.env`).
@@ -81,7 +81,8 @@ npm run dev              # arranca en http://localhost:5173
   a la URL pública del backend.
 - En el backend, pon `CLIENT_URL` con la URL pública del frontend (CORS).
 
-## 👥 Roles del equipo
-(Completar en el Excel de la rúbrica)
-- Integrante 1 — ...
-- Integrante 2 — ...
+## Roles del equipo
+- Juan Manuek Frías Cortes -- Jefe de Equipo (Full Stack)
+- Eliseo Villalobos Reveles -- BackEnd
+- Ramiro Vazquez Lopes  -- BackEnd
+- Sara Alexandra Chamorro Cuevas -- FrontEnd
