@@ -5,6 +5,11 @@
 // ============================================
 const { body } = require('express-validator');
 
+// Helpers reutilizables para no repetir lógica entre body() y body('items[*]')
+function esArrayNoVacio(valor) {
+  return Array.isArray(valor) && valor.length > 0;
+}
+
 // --- Registro de usuario ---
 const reglasRegistro = [
   body('nombre')
@@ -38,4 +43,23 @@ const reglasProducto = [
     .isLength({ min: 2 }).withMessage('La categoría no es válida'),
 ];
 
-module.exports = { reglasRegistro, reglasLogin, reglasProducto };
+// --- Crear pedido ---
+// body esperado: { items: [ { producto_id: 1, cantidad: 2 }, ... ] }
+const reglasPedido = [
+  body('items')
+    .custom(esArrayNoVacio)
+    .withMessage('El pedido debe incluir al menos un producto'),
+
+  // Validamos cada elemento del arreglo "items" individualmente.
+  // body('items.*.campo') le dice a express-validator: "revisa este
+  // campo en TODOS los objetos del arreglo items", no solo en el primero.
+  body('items.*.producto_id')
+    .notEmpty().withMessage('Cada producto del pedido necesita un producto_id')
+    .isInt({ gt: 0 }).withMessage('producto_id debe ser un número entero válido'),
+
+  body('items.*.cantidad')
+    .notEmpty().withMessage('Cada producto del pedido necesita una cantidad')
+    .isInt({ gt: 0 }).withMessage('La cantidad debe ser un número entero mayor a 0'),
+];
+
+module.exports = { reglasRegistro, reglasLogin, reglasProducto, reglasPedido };
