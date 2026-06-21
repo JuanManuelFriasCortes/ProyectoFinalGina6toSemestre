@@ -2,10 +2,14 @@
 // PÁGINA: Login
 // FORMULARIO CONTROLADO (cada input ligado a useState) con validaciones.
 // Demuestra: useState, formulario controlado + validaciones,
-// async/await, estados de carga/éxito/error, eventos, consumo de API.
+// async/await, estados de carga/éxito/error, eventos, consumo de API,
+// estado global (useAuth), componentes funcionales.
+//
+// Diseño: el formulario va sobre un "clipboard" (tablero con clip y
+// esquina doblada) hecho con CSS, sobre el fondo de la página de Inicio.
 // ============================================
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../hooks/useAuth';
 import Mensaje from '../components/Mensaje';
@@ -52,35 +56,149 @@ function Login() {
   }
 
   return (
-    <div>
-      <h2>Iniciar sesión</h2>
-      <form onSubmit={manejarSubmit}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Contraseña:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
+    <div className="auth-root">
+      <Estilos />
 
-        {/* Estado de carga */}
-        <button type="submit" disabled={cargando}>
-          {cargando ? 'Entrando...' : 'Entrar'}
-        </button>
-      </form>
+      {/* Clipboard */}
+      <div className="clip">
+        <div className="clip__clip" aria-hidden />
+        <div className="clip__hoja">
+          <h2 className="clip__titulo">Iniciar sesión</h2>
+          <p className="clip__sub">Bienvenido de nuevo a Cafetería MOMO</p>
 
-      {/* Mensaje de error en la interfaz (no alert) */}
-      <Mensaje tipo="error" texto={error} />
+          <form onSubmit={manejarSubmit} className="clip__form">
+            <div className="campo">
+              <label>Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="tucorreo@ejemplo.com"
+              />
+            </div>
+            <div className="campo">
+              <label>Contraseña</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+              />
+            </div>
+
+            {/* Estado de carga */}
+            <button type="submit" className="clip__btn" disabled={cargando}>
+              {cargando ? 'Entrando...' : 'Entrar'}
+            </button>
+          </form>
+
+          {/* Mensaje de error en la interfaz (no alert) */}
+          <div className="clip__msg"><Mensaje tipo="error" texto={error} /></div>
+
+          <p className="clip__pie">
+            ¿No tienes cuenta? <Link to="/registro" className="clip__link">Regístrate</Link>
+          </p>
+        </div>
+        <div className="clip__esquina" aria-hidden />
+      </div>
     </div>
+  );
+}
+
+// ---------- Estilos ----------
+function Estilos() {
+  return (
+    <>
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap"
+        rel="stylesheet"
+      />
+      <style>{`
+      .auth-root {
+        min-height: 100vh;
+        /* Mismo fondo que la página de Inicio (Rosegold Aura) */
+        background: linear-gradient(135deg, #f2ebe2 0%, #e8e0d6 60%, #dcc8c0 100%);
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        padding: 130px 16px 50px;
+        display: flex; justify-content: center; align-items: flex-start;
+      }
+
+      /* ---- Clipboard (tablero) ---- */
+      .clip {
+        position: relative;
+        width: min(420px, 100%);
+        background: #b08a6a;            /* madera/tablero café */
+        background: linear-gradient(160deg, #bd9774, #a8785a);
+        border-radius: 14px;
+        padding: 30px 26px 26px;
+        box-shadow: 0 18px 40px rgba(94,70,71,.4);
+      }
+      /* Clip metálico arriba */
+      .clip__clip {
+        position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
+        width: 96px; height: 30px;
+        background: linear-gradient(180deg, #4a4a4a, #2b2b2b);
+        border-radius: 7px;
+        box-shadow: 0 4px 8px rgba(0,0,0,.35);
+        z-index: 3;
+      }
+      .clip__clip::after {
+        content: ''; position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+        width: 60px; height: 8px; background: #5e5e5e; border-radius: 4px;
+      }
+
+      /* Hoja de papel */
+      .clip__hoja {
+        position: relative; z-index: 2;
+        background: #fbf8f2;
+        border-radius: 6px;
+        padding: 34px 28px 26px;
+        box-shadow: inset 0 2px 5px rgba(0,0,0,.05);
+      }
+
+      .clip__titulo {
+        font-family: 'Playfair Display', serif; font-style: italic; font-weight: 600;
+        font-size: 30px; color: #a3556a; margin: 0 0 4px; text-align: center;
+      }
+      .clip__sub { text-align: center; color: #a8827c; font-size: 15px; margin: 0 0 22px; }
+
+      .clip__form { display: flex; flex-direction: column; gap: 16px; }
+      .campo { display: flex; flex-direction: column; gap: 6px; }
+      .campo label { font-size: 12px; letter-spacing: .5px; text-transform: uppercase; color: #a8827c; }
+      .campo input {
+        background: #fff; border: 1px solid #e0d3c8; border-radius: 8px;
+        color: #5e4647; padding: 11px 13px; font-family: inherit; font-size: 15px;
+      }
+      .campo input:focus { outline: none; border-color: #c98e92; }
+      .campo input::placeholder { color: #c2b3ac; }
+
+      .clip__btn {
+        margin-top: 6px; border: none; cursor: pointer;
+        background: #a3556a; color: #fff; font-family: inherit;
+        font-size: 15px; letter-spacing: 1px; text-transform: uppercase;
+        padding: 12px; border-radius: 8px; transition: background .2s, transform .15s;
+      }
+      .clip__btn:hover:not(:disabled) { background: #8a4459; transform: translateY(-1px); }
+      .clip__btn:disabled { opacity: .6; cursor: default; }
+
+      .clip__msg { text-align: center; margin-top: 12px; }
+      .clip__pie { text-align: center; color: #a8827c; font-size: 14px; margin: 18px 0 0; }
+      .clip__link { color: #a3556a; font-weight: 600; text-decoration: none; }
+      .clip__link:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+      /* Esquina doblada del papel */
+      .clip__esquina {
+        position: absolute; bottom: 26px; right: 26px;
+        width: 0; height: 0; z-index: 2;
+        border-style: solid; border-width: 0 0 26px 26px;
+        border-color: transparent transparent #a8785a transparent;
+        border-bottom-right-radius: 6px;
+        filter: drop-shadow(-2px -2px 3px rgba(0,0,0,.15));
+      }
+      `}</style>
+    </>
   );
 }
 

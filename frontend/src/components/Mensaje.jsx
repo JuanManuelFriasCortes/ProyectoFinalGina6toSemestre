@@ -13,7 +13,7 @@ function Mensaje({ tipo, texto }) {
   // HTML pelón: solo un borde para distinguir éxito/error.
   // El compañero de diseño le pondrá estilo después.
   const borde = tipo === 'error' ? '2px solid red' : '2px solid green';
-
+ 
   return (
     <p
       role="alert"
